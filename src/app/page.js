@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Footer from '@/components/Footer';
+import { Users, Globe, TrendingDown,BarChart3, Lightbulb, Target } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -20,7 +21,7 @@ export default function Home() {
             {/* Fallback for browsers that don't support video */}
             Your browser does not support the video tag.
           </video>
-          
+
           {/* Dark overlay for better text readability */}
           <div className="absolute inset-0 bg-gradient-to-br from-green-900/70 via-emerald-900/60 to-teal-900/70"></div>
         </div>
@@ -29,7 +30,7 @@ export default function Home() {
         <div className="absolute top-20 left-10 w-96 h-96 bg-green-400 rounded-full mix-blend-overlay filter blur-xl opacity-30 animate-pulse"></div>
         <div className="absolute top-40 right-10 w-96 h-96 bg-emerald-400 rounded-full mix-blend-overlay filter blur-xl opacity-30 animate-pulse delay-700"></div>
         <div className="absolute -bottom-8 left-1/2 w-96 h-96 bg-teal-400 rounded-full mix-blend-overlay filter blur-xl opacity-30 animate-pulse delay-1000"></div> */}
-        
+
         <div className="relative w-full text-center px-4 z-10">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-md rounded-full shadow-lg mb-8 border border-white/30">
@@ -48,7 +49,7 @@ export default function Home() {
 
           {/* Subheading */}
           <p className="text-2xl md:text-3xl text-green-50 max-w-4xl mx-auto mb-16 leading-relaxed drop-shadow-lg">
-            Track, analyze, and reduce your daily carbon emissions. 
+            Track, analyze, and reduce your daily carbon emissions.
             Join thousands taking action for a <span className="text-green-300 font-semibold">greener planet</span>.
           </p>
 
@@ -67,9 +68,9 @@ export default function Home() {
 
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto px-4">
-            <StatCard number="50K+" label="Active Users" icon="👥" />
-            <StatCard number="2.5M" label="Tons CO₂ Tracked" icon="🌍" />
-            <StatCard number="85%" label="Avg. Reduction" icon="📉" />
+            <StatCard number="50K+" label="Active Users" Icon={Users} />
+            <StatCard number="2.5M" label="Tons CO₂ Tracked" Icon={Globe} />
+            <StatCard number="85%" label="Avg. Reduction" Icon={TrendingDown} />
           </div>
         </div>
 
@@ -95,19 +96,19 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-7xl mx-auto px-4">
             <FeatureCard
-              icon="📊"
+              Icon={BarChart3}
               title="Real-Time Tracking"
               description="Monitor your carbon footprint daily with accurate, data-driven insights"
               gradient="from-green-400 to-emerald-500"
             />
             <FeatureCard
-              icon="💡"
+              Icon={Lightbulb}
               title="Personalized Tips"
               description="Get custom recommendations to reduce your environmental impact"
               gradient="from-emerald-400 to-teal-500"
             />
             <FeatureCard
-              icon="🎯"
+              Icon={Target}
               title="Set Goals"
               description="Track progress toward your sustainability targets and celebrate wins"
               gradient="from-teal-400 to-cyan-500"
@@ -163,26 +164,30 @@ export default function Home() {
           </Link>
         </div>
       </section>
-      <Footer/>
+      <Footer />
     </div>
   );
 }
 
-function StatCard({ number, label, icon }) {
+function StatCard({ number, label, Icon }) {
   return (
-    <div className="bg-white/90 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white/30 hover:shadow-3xl transition-all duration-300 hover:scale-105">
-      <div className="text-5xl mb-4">{icon}</div>
+    <div className="bg-white/90 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white/30 hover:shadow-3xl transition-all duration-300 hover:scale-105 text-center cursor-pointer">
+      <div className="mb-4 flex justify-center">
+        <Icon className="w-12 h-12 text-blue-600" strokeWidth={1.5} />
+      </div>
       <div className="text-4xl font-bold text-gray-800 mb-2">{number}</div>
       <div className="text-gray-700 font-medium text-lg">{label}</div>
     </div>
   );
 }
 
-function FeatureCard({ icon, title, description, gradient }) {
+
+
+function FeatureCard({ Icon, title, description, gradient }) {
   return (
     <div className="group bg-white rounded-2xl p-10 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100">
-      <div className={`w-20 h-20 bg-gradient-to-br ${gradient} rounded-xl flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform duration-300`}>
-        {icon}
+      <div className={`w-20 h-20 bg-gradient-to-br ${gradient} rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+        <Icon className="w-10 h-10 text-white" strokeWidth={2} />
       </div>
       <h3 className="text-2xl font-bold text-gray-800 mb-4">{title}</h3>
       <p className="text-gray-600 leading-relaxed text-lg">{description}</p>

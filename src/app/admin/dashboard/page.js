@@ -3,7 +3,9 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
+
 export default function AdminDashboard() {
+  const API = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
   const [admin, setAdmin] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -43,7 +45,7 @@ export default function AdminDashboard() {
 
   const fetchUsers = async (token) => {
     try {
-      const response = await fetch('http://localhost:5000/admin/users', {
+      const response = await fetch(`${API}/user`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -114,7 +116,7 @@ export default function AdminDashboard() {
 
     try {
       const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/admin/users/${userId}`, {
+      const response = await fetch(`${API}users/${userId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

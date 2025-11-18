@@ -3,6 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 
 export default function RegisterPage() {
+  const API = process.env.NEXT_PUBLIC_API_URL;
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -115,7 +116,7 @@ export default function RegisterPage() {
         householdSize: Number(formData.householdSize),
       };
 
-      const response = await fetch("http://localhost:5000/user/register", {
+      const response = await fetch(`${API}/user/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
