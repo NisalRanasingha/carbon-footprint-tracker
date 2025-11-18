@@ -22,6 +22,34 @@ export default function AdminDashboard() {
   });
 
   useEffect(() => {
+    const fetchUsers = async (token) => {
+      try {
+        const response = await fetch(`${API}/user`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setUsers(data.users || []);
+          calculateStats(data.users || []);
+        } else {
+          const mockUsers = generateMockUsers();
+          setUsers(mockUsers);
+          calculateStats(mockUsers);
+        }
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        const mockUsers = generateMockUsers();
+        setUsers(mockUsers);
+        calculateStats(mockUsers);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     // Check authentication
     const token = localStorage.getItem('token') || sessionStorage.getItem('token');
     const userData = localStorage.getItem('user') || sessionStorage.getItem('user');
@@ -41,36 +69,7 @@ export default function AdminDashboard() {
 
     setAdmin(parsedUser);
     fetchUsers(token);
-  }, [router]);
-
-  const fetchUsers = async (token) => {
-    try {
-      const response = await fetch(`${API}/user`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setUsers(data.users || []);
-        calculateStats(data.users || []);
-      } else {
-        const mockUsers = generateMockUsers();
-        setUsers(mockUsers);
-        calculateStats(mockUsers);
-      }
-    } catch (error) {
-      console.error('Error fetching users:', error);
-      const mockUsers = generateMockUsers();
-      setUsers(mockUsers);
-      calculateStats(mockUsers);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  }, [router, API]);
 
   const calculateStats = (usersList) => {
     const totalUsers = usersList.length;
@@ -97,6 +96,33 @@ export default function AdminDashboard() {
     });
   };
 
+  const generateMockUsers = () => {
+    return [
+      {
+        _id: '1',
+        fullName: 'John Doe',
+        email: 'john@example.com',
+        travelMode: 'car',
+        distance: 15,
+        dietType: 'meat',
+        electricity: 300,
+        householdSize: 3,
+        role: 'user'
+      },
+      {
+        _id: '2',
+        fullName: 'Jane Smith',
+        email: 'jane@example.com',
+        travelMode: 'bus',
+        distance: 10,
+        dietType: 'vegetarian',
+        electricity: 250,
+        householdSize: 2,
+        role: 'user'
+      }
+    ];
+  };
+
   const openDeleteModal = (user) => {
     setDeleteModal({
       isOpen: true,
@@ -116,7 +142,7 @@ export default function AdminDashboard() {
 
     try {
       const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-      const response = await fetch(`${API}users/${userId}`, {
+      const response = await fetch(`${API}/users/${userId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
