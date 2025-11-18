@@ -116,7 +116,7 @@ export default function UserDashboard() {
                 Welcome back, {user.fullName.split(' ')[0]}!
               </h1>
               <p className="text-gray-600 text-lg">
-                Here's your environmental impact overview
+                Here&#39;s your environmental impact overview
               </p>
             </div>
             <div className="hidden md:block">
