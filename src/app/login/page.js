@@ -2,23 +2,72 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import Login from '@/public/login.jpg'
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login:', { email, password });
+    setError('');
+    setLoading(true);
+
+    // Validation
+    if (!email || !password) {
+      setError('Please enter both email and password');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5000/user/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Login failed');
+      }
+
+      // Store token and user data (including role)
+      if (rememberMe) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+      } else {
+        sessionStorage.setItem('token', data.token);
+        sessionStorage.setItem('user', JSON.stringify(data.user));
+      }
+
+      // Trigger navbar update with custom event
+      window.dispatchEvent(new Event('authChange'));
+
+      // Success - redirect to home page
+      console.log('Login successful:', data);
+      router.push('/');
+
+    } catch (err) {
+      setError(err.message || 'An error occurred during login');
+      console.error('Login error:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen w-full flex mt-[68px]">
       {/* Left Side - Image Section */}
-       <div 
+      <div 
         className="hidden lg:block lg:w-1/2 relative bg-green-50"
         style={{
           backgroundImage: "url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=1200&q=80')",
@@ -51,8 +100,15 @@ export default function LoginPage() {
             </p>
           </div>
 
+          {/* Error Message */}
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-600 text-sm">{error}</p>
+            </div>
+          )}
+
           {/* Login Form */}
-          <div className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Field */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
@@ -65,6 +121,7 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
                 placeholder="your@email.com"
+                disabled={loading}
               />
             </div>
 
@@ -81,11 +138,13 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all pr-12"
                   placeholder="Enter your password"
+                  disabled={loading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+                  disabled={loading}
                 >
                   {showPassword ? (
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -101,12 +160,15 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Forgot Password */}
+            {/* Remember Me & Forgot Password */}
             <div className="flex items-center justify-between">
               <label className="flex items-center">
                 <input
                   type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
                   className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                  disabled={loading}
                 />
                 <span className="ml-2 text-sm text-gray-600">Remember me</span>
               </label>
@@ -115,17 +177,18 @@ export default function LoginPage() {
               </Link>
             </div>
 
-            {/* Login Button with Left-to-Right Fill Animation */}
+            {/* Login Button */}
             <button
-              onClick={handleSubmit}
-              className="relative w-full py-3 rounded-lg font-semibold text-lg overflow-hidden group border-2 border-green-600 transition-all duration-300"
+              type="submit"
+              disabled={loading}
+              className="relative w-full py-3 rounded-lg font-semibold text-lg overflow-hidden group border-2 border-green-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <span className="absolute inset-0 w-0 bg-gradient-to-r from-green-600 to-emerald-600 transition-all duration-500 ease-out group-hover:w-full"></span>
               <span className="relative text-green-600 group-hover:text-white transition-colors duration-300">
-                Login
+                {loading ? 'Logging in...' : 'Login'}
               </span>
             </button>
-          </div>
+          </form>
 
           {/* Register Link */}
           <div className="mt-6 text-center">

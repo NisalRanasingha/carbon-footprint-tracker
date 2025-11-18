@@ -5,40 +5,58 @@ import Footer from '@/components/Footer';
 export default function Home() {
   return (
     <div className="w-full m-0 p-0">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden pt-32 pb-40 w-full bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 m-0 p-0">
-        {/* Animated background elements */}
-        <div className="absolute top-20 left-10 w-96 h-96 bg-green-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
-        <div className="absolute top-40 right-10 w-96 h-96 bg-emerald-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse delay-700"></div>
-        <div className="absolute -bottom-8 left-1/2 w-96 h-96 bg-teal-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse delay-1000"></div>
+      {/* Hero Section with Video Background */}
+      <section className="relative overflow-hidden pt-32 pb-40 w-full m-0 p-0 min-h-screen flex items-center">
+        {/* Video Background */}
+        <div className="absolute inset-0 w-full h-full">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+          >
+            <source src="nature-bg.mp4" type="video/mp4" />
+            {/* Fallback for browsers that don't support video */}
+            Your browser does not support the video tag.
+          </video>
+          
+          {/* Dark overlay for better text readability */}
+          <div className="absolute inset-0 bg-gradient-to-br from-green-900/70 via-emerald-900/60 to-teal-900/70"></div>
+        </div>
+
+        {/* Animated background elements (subtle over video)
+        <div className="absolute top-20 left-10 w-96 h-96 bg-green-400 rounded-full mix-blend-overlay filter blur-xl opacity-30 animate-pulse"></div>
+        <div className="absolute top-40 right-10 w-96 h-96 bg-emerald-400 rounded-full mix-blend-overlay filter blur-xl opacity-30 animate-pulse delay-700"></div>
+        <div className="absolute -bottom-8 left-1/2 w-96 h-96 bg-teal-400 rounded-full mix-blend-overlay filter blur-xl opacity-30 animate-pulse delay-1000"></div> */}
         
-        <div className="relative w-full text-center px-4">
+        <div className="relative w-full text-center px-4 z-10">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm mb-8 border border-green-100">
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-            <span className="text-sm font-medium text-gray-700">Track Your Impact Today</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-md rounded-full shadow-lg mb-8 border border-white/30">
+            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+            <span className="text-sm font-medium text-white">Track Your Impact Today</span>
           </div>
 
           {/* Main Heading */}
           <h1 className="text-6xl md:text-8xl font-bold mb-8 leading-tight">
-            <span className="bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-green-300 via-emerald-200 to-teal-300 bg-clip-text text-transparent drop-shadow-lg">
               Measure Your
             </span>
             <br />
-            <span className="text-gray-800">Carbon Footprint</span>
+            <span className="text-white drop-shadow-2xl">Carbon Footprint</span>
           </h1>
 
           {/* Subheading */}
-          <p className="text-2xl md:text-3xl text-gray-600 max-w-4xl mx-auto mb-16 leading-relaxed">
+          <p className="text-2xl md:text-3xl text-green-50 max-w-4xl mx-auto mb-16 leading-relaxed drop-shadow-lg">
             Track, analyze, and reduce your daily carbon emissions. 
-            Join thousands taking action for a <span className="text-green-600 font-semibold">greener planet</span>.
+            Join thousands taking action for a <span className="text-green-300 font-semibold">greener planet</span>.
           </p>
 
           {/* CTA Button */}
           <div className="flex justify-center mb-20">
             <Link
               href="/calculator"
-              className="group px-12 py-5 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-full font-semibold text-xl shadow-2xl hover:shadow-3xl hover:scale-110 transition-all duration-300 flex items-center gap-3"
+              className="group px-12 py-5 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-full font-semibold text-xl shadow-2xl hover:shadow-3xl hover:scale-110 transition-all duration-300 flex items-center gap-3 backdrop-blur-sm border border-white/20"
             >
               Start Calculating
               <svg className="w-6 h-6 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -53,6 +71,13 @@ export default function Home() {
             <StatCard number="2.5M" label="Tons CO₂ Tracked" icon="🌍" />
             <StatCard number="85%" label="Avg. Reduction" icon="📉" />
           </div>
+        </div>
+
+        {/* Scroll Down Indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
         </div>
       </section>
 
@@ -145,10 +170,10 @@ export default function Home() {
 
 function StatCard({ number, label, icon }) {
   return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-green-100 hover:shadow-2xl transition-shadow duration-300">
+    <div className="bg-white/90 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white/30 hover:shadow-3xl transition-all duration-300 hover:scale-105">
       <div className="text-5xl mb-4">{icon}</div>
       <div className="text-4xl font-bold text-gray-800 mb-2">{number}</div>
-      <div className="text-gray-600 font-medium text-lg">{label}</div>
+      <div className="text-gray-700 font-medium text-lg">{label}</div>
     </div>
   );
 }
