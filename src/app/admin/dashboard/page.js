@@ -24,7 +24,8 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchUsers = async (token) => {
       try {
-        const response = await fetch(`${API}/user`, {
+        const response = await fetch(`${API}/admin/users`, {
+          method: "GET",
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
